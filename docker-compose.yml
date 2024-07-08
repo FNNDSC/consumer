@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  consumer:
+    image: local/consumer
+    container_name: consumer
+    build: .
+    ports:
+      - "2020:2020"
+    command: uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 2020
+    environment:
+      KAFKA_URL: "127.0.0.1:9092"
+    volumes:
+      - ./:/app/
+
