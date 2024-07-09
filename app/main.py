@@ -19,7 +19,7 @@ finally request `pfbridge` to create a workflow.
 ## pfdcm
 app = FastAPI(
     title='consumer',
-    version='0.0.1',
+    version='0.1.0',
     contact={"name": "FNNDSC", "email": "dev@babymri.org"},
     openapi_tags=[],
     description=description
@@ -32,6 +32,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 loop = asyncio.get_event_loop()
+kafka_topic = os.getenv('KAFKA_TOPIC')
 
 async def consume():
     consumer = None
@@ -41,7 +42,7 @@ async def consume():
     except Exception as ex:
         print(f"{ex}. Retrying in 10 seconds")
         sleep(10)
-        consumer = AIOKafkaConsumer("test", bootstrap_servers=f"{os.getenv('KAFKA_URL')},{os.getenv('KAFKA_URL')}",
+        consumer = AIOKafkaConsumer(kafka_topic, bootstrap_servers=f"{os.getenv('KAFKA_URL')},{os.getenv('KAFKA_URL')}",
                                     loop=loop)
 
     await consumer.start()
